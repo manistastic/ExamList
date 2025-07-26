@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExamHub India - Your Gateway to Success</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            color: white;
+        }
+
+        .logo {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .page {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Homepage Styles */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            padding: 40px;
+        }
+
+        .category-card {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .category-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .category-card.upsc { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .category-card.ssc { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .category-card.teaching { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .category-card.banking { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .category-card.railways { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        .category-card.state-pcs { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+
+        .category-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .category-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .category-description {
+            color: rgba(255,255,255,0.9);
+            font-size: 0.9rem;
+        }
+
+        /* Exam List Styles */
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 40px;
+            position: relative;
+        }
+
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .page-subtitle {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .exams-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            padding: 40px;
+        }
+
+        .exam-card {
+            background: white;
+            border: 2px solid #f0f0f0;
+            border-radius: 12px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .exam-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .exam-card:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .exam-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .exam-description {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .exam-meta {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .exam-meta span {
+            background: #f8f9fa;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        /* Exam Detail Styles */
+        .exam-detail {
+            padding: 40px;
+        }
+
+        .exam-hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .exam-hero h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .exam-hero .subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .detail-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .detail-section h3 {
+            color: #333;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .detail-section p, .detail-section li {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .detail-section ul {
+            padding-left: 20px;
+        }
+
+        .detail-section li {
+            margin-bottom: 5px;
+        }
+
+        .eligibility-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .eligibility-table th,
+        .eligibility-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .eligibility-table th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+
+        .important-dates {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .important-dates h3 {
+            margin-bottom: 15px;
+        }
+
+        .dates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .date-item {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .date-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .date-value {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .categories-grid {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">🎓 ExamHub India</div>
+            <div class="tagline">Your Gateway to Success - Discover, Prepare, Excel</div>
+        </header>
+
+        <!-- Homepage -->
+        <div id="homepage" class="page active">
+            <div class="categories-grid">
+                <button class="category-card upsc" onclick="showExamList('upsc')">
+                    <span class="category-icon">🏛️</span>
+                    <div class="category-title">UPSC</div>
+                    <div class="category-description">Union Public Service Commission exams for civil services</div>
+                </button>
+                
+                <button class="category-card ssc" onclick="showExamList('ssc')">
+                    <span class="category-icon">📊</span>
+                    <div class="category-title">SSC</div>
+                    <div class="category-description">Staff Selection Commission exams</div>
+                </button>
+                
+                <button class="category-card teaching" onclick="showExamList('teaching')">
+                    <span class="category-icon">👩‍🏫</span>
+                    <div class="category-title">Teaching</div>
+                    <div class="category-description">Teaching qualification and recruitment exams</div>
+                </button>
+                
+                <button class="category-card banking" onclick="showExamList('banking')">
+                    <span class="category-icon">🏦</span>
+                    <div class="category-title">Banking</div>
+                    <div class="category-description">Banking sector recruitment examinations</div>
+                </button>
+                
+                <button class="category-card railways" onclick="showExamList('railways')">
+                    <span class="category-icon">🚄</span>
+                    <div class="category-title">Railways</div>
+                    <div class="category-description">Indian Railways recruitment exams</div>
+                </button>
+                
+                <button class="category-card state-pcs" onclick="showExamList('state-pcs')">
+                    <span class="category-icon">🗳️</span>
+                    <div class="category-title">State PCS</div>
+                    <div class="category-description">State Public Service Commission exams</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- UPSC Exam List -->
+        <div id="upsc-list" class="page">
+            <div class="page-header">
+                <button class="back-btn" onclick="showHomepage()">← Back to Categories</button>
+                <div class="page-title">UPSC Examinations</div>
+                <div class="page-subtitle">Union Public Service Commission - Premier Civil Services</div>
+            </div>
+            <div class="exams-grid">
+                <div class="exam-card" onclick="showExamDetail('upsc-cse')">
+                    <div class="exam-title">Civil Services Examination (CSE)</div>
+                    <div class="exam-description">Premier exam for IAS, IPS, IFS and other central services. The most prestigious exam in India.</div>
+                    <div class="exam-meta">
+                        <span>Prelims + Mains + Interview</span>
+                        <span>Age: 21-32</span>
+                    </div>
+                </div>
+                <div class="exam-card" onclick="showExamDetail('upsc-ifos')">
+                    <div class="exam-title">Indian Forest Service (IFoS)</div>
+                    <div class="exam-description">For recruitment to Indian Forest Service officers responsible for forest conservation.</div>
+                    <div class="exam-meta">
+                        <span>Prelims + Mains + Interview</span>
+                        <span>Age: 21-30</span>
+                    </div>
+                </div>
+                <div class="exam-card" onclick="showExamDetail('upsc-ese')">
+                    <div class="exam-title">Engineering Services Examination (ESE)</div>
+                    <div class="exam-description">For recruitment to Group A engineering services under Government of India.</div>
+                    <div class="exam-meta">
+                        <span>Prelims + Mains + Interview</span>
+                        <span>Engineering Graduate</span>
+                    </div>
+                </div>
+                <div class="exam-card" onclick="showExamDetail('upsc-cds')">
+                    <div class="exam-title">Combined Defence Services (CDS)</div>
+                    <div class="exam-description">For admission to Indian Military Academy, Naval Academy, and Air Force Academy.</div>
+                    <div class="exam-meta">
+                        <span>Written + SSB Interview</span>
+                        <span>Graduate</span>
+                    </div>
+                </div>
+                <div class="exam-card" onclick="showExamDetail('upsc-nda')">
+                    <div class="exam-title">National Defence Academy (NDA)</div>
+                    <div class="exam-description">For admission to Army, Navy and Air Force wings of NDA.</div>
+                    <div class="exam-meta">
+                        <span>Written + SSB Interview</span>
+                        <span>12th Pass</span>
+                    </div>
+                </div>
+                <div class="exam-card" onclick="showExamDetail('upsc-cms')">
+                    <div class="exam-title">Combined Medical Services (CMS)</div>
+                    <div class="exam-description">For recruitment to various medical services under central government.</div>
+                    <div class="exam-meta">
+                        <span>Written + Interview</span>
+                        <span>Medical Graduate</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SSC Exam List -->
+        <div id="ssc-list" class="page">
+            <div class="page-header">
+                <button class="back-btn" onclick="showHomepage()">← Back to Categories</button>
+                <div class="page-title">SSC Examinations</div>
+                <div class="page-subtitle">Staff Selection Commission - Government Job Opportunities</div>
+            </div>
+            <div class="exams-grid">
+                <div class="exam-card" onclick="showExamDetail('ssc-cgl')">
+                    <div class="exam-title">Combined Graduate Level (CGL)</div>
+                    <div class="exam-description">For Group B and Group C posts in various ministries and departments.</div>
+                    <div class="exam-meta">
+                        <span>Tier 1 + Tier 2 + Tier 3</span>
+                        <span>Graduate</span>
+                    </div>
+                </div>
+                <div class="exam-card" onclick="showExamDetail('ssc-chsl')">
+                    <div class="exam-title">Combined Higher Secondary Level (CHSL)</div>
+                    <div class="exam-description">For LDC, JSA, PA, SA, and DEO posts in various offices.</div>
+                    <div class="exam-meta">
+                        <span>Tier 1 + Tier 2 + Tier 3</span>
+                        <span>12th Pass</span>
+                    </div>
+                </div>
+                <div class="exam-card" onclick="showExamDetail('ssc-mts')">
+                    <div class="exam-title">Multi Tasking Staff (MTS)</div>
+                    <div class="exam-description">For recruitment to Group C non-gazetted, non-ministerial posts.</div>
+                    <div class="exam-meta">
+                        <span>CBT + Descriptive</span>
+                        <span>10th Pass</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Other category lists would follow similar pattern -->
+        <div id="teaching-list" class="page">
+            <div class="page-header">
+                <button class="back-btn" onclick="showHomepage()">← Back to Categories</button>
+                <div class="page-title">Teaching Examinations</div>
+                <div class="page-subtitle">Teaching Qualification & Recruitment Exams</div>
+            </div>
+            <div class="exams-grid">
+                <div class="exam-card" onclick="showExamDetail('ctet')">
+                    <div class="exam-title">Central Teacher Eligibility Test (CTET)</div>
+                    <div class="exam-description">Qualifying exam for teaching positions in central government schools.</div>
+                    <div class="exam-meta">
+                        <span>Paper 1 & 2</span>
+                        <span>B.Ed/D.Ed</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="banking-list" class="page">
+            <div class="page-header">
+                <button class="back-btn" onclick="showHomepage()">← Back to Categories</button>
+                <div class="page-title">Banking Examinations</div>
+                <div class="page-subtitle">Banking Sector Recruitment Exams</div>
+            </div>
+            <div class="exams-grid">
+                <div class="exam-card" onclick="showExamDetail('ibps-po')">
+                    <div class="exam-title">IBPS PO</div>
+                    <div class="exam-description">Probationary Officer recruitment for public sector banks.</div>
+                    <div class="exam-meta">
+                        <span>Prelims + Mains + Interview</span>
+                        <span>Graduate</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="railways-list" class="page">
+            <div class="page-header">
+                <button class="back-btn" onclick="showHomepage()">← Back to Categories</button>
+                <div class="page-title">Railway Examinations</div>
+                <div class="page-subtitle">Indian Railways Recruitment Exams</div>
+            </div>
+            <div class="exams-grid">
+                <div class="exam-card" onclick="showExamDetail('rrb-ntpc')">
+                    <div class="exam-title">RRB NTPC</div>
+                    <div class="exam-description">Non-Technical Popular Categories recruitment in Indian Railways.</div>
+                    <div class="exam-meta">
+                        <span>CBT 1 + CBT 2</span>
+                        <span>Graduate/12th</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="state-pcs-list" class="page">
+            <div class="page-header">
+                <button class="back-btn" onclick="showHomepage()">← Back to Categories</button>
+                <div class="page-title">State PCS Examinations</div>
+                <div class="page-subtitle">State Public Service Commission Exams</div>
+            </div>
+            <div class="exams-grid">
+                <div class="exam-card" onclick="showExamDetail('uppcs')">
+                    <div class="exam-title">UPPCS</div>
+                    <div class="exam-description">Uttar Pradesh Provincial Civil Services examination.</div>
+                    <div class="exam-meta">
+                        <span>Prelims + Mains + Interview</span>
+                        <span>Graduate</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exam Detail Page Template -->
+        <div id="exam-detail" class="page">
+            <div class="page-header">
+                <button class="back-btn" onclick="goBackToList()">← Back to Exam List</button>
+                <div class="page-title" id="detail-title">Exam Name</div>
+                <div class="page-subtitle" id="detail-subtitle">Exam Description</div>
+            </div>
+            
+            <div class="exam-detail">
+                <div class="important-dates">
+                    <h3>📅 Important Dates 2024</h3>
+                    <div class="dates-grid" id="dates-container">
+                        <div class="date-item">
+                            <div class="date-label">Application Start</div>
+                            <div class="date-value">To be announced</div>
+                        </div>
+                        <div class="date-item">
+                            <div class="date-label">Application End</div>
+                            <div class="date-value">To be announced</div>
+                        </div>
+                        <div class="date-item">
+                            <div class="date-label">Exam Date</div>
+                            <div class="date-value">To be announced</div>
+                        </div>
+                        <div class="date-item">
+                            <div class="date-label">Result Date</div>
+                            <div class="date-value">To be announced</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-grid">
+                    <div class="detail-section">
+                        <h3>📋 Exam Overview</h3>
+                        <p id="exam-overview">Detailed information about the examination will be displayed here.</p>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>✅ Eligibility Criteria</h3>
+                        <table class="eligibility-table">
+                            <tr>
+                                <th>Criteria</th>
+                                <th>Requirement</th>
+                            </tr>
+                            <tbody id="eligibility-table">
+                                <tr><td>Age Limit</td><td>21-30 years</td></tr>
+                                <tr><td>Education</td><td>Graduate</td></tr>
+                                <tr><td>Nationality</td><td>Indian</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>📚 Exam Pattern</h3>
+                        <div id="exam-pattern">
+                            <p>The exam pattern details will be shown here including number of papers, subjects, marks distribution, and duration.</p>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>📖 Syllabus Highlights</h3>
+                        <div id="syllabus-highlights">
+                            <ul>
+                                <li>Subject-wise syllabus will be listed here</li>
+                                <li>Important topics and chapters</li>
+                                <li>Weightage information</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>💰 Application Fee</h3>
+                        <div id="application-fee">
+                            <p>Fee structure for different categories will be displayed here.</p>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>🎯 Selection Process</h3>
+                        <div id="selection-process">
+                            <p>Step-by-step selection process will be explained here.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentCategory = '';
+        
+        // Sample exam data - you can expand this for all 50 exams
+        const examData = {
+            'upsc-cse': {
+                title: 'Civil Services Examination (CSE)',
+                subtitle: 'IAS, IPS, IFS and other Central Services',
+                overview: 'The Civil Services Examination is conducted annually by UPSC for recruitment to various Group A and Group B central services. It is considered one of the toughest competitive exams in India with a success rate of less than 1%.',
+                eligibility: [
+                    ['Age Limit', '21-32 years (relaxation for reserved categories)'],
+                    ['Education', 'Bachelor\'s degree from recognized university'],
+                    ['Nationality', 'Indian citizen'],
+                    ['Attempts', '6 attempts for General, 9 for OBC, unlimited for SC/ST']
+                ],
+                pattern: 'Three-stage examination: Preliminary (objective), Main (descriptive), and Personality Test (Interview). Prelims has 2 papers of 200 marks each. Mains has 9 papers totaling 1750 marks. Interview carries 275 marks.',
+                syllabus: [
+                    'General Studies (History, Geography, Polity, Economy)',
+                    'Current Affairs and General Knowledge',
+                    'Optional Subject (one from 48 subjects)',
+                    'Essay Writing and Comprehension',
+                    'Indian Languages and English'
+                ],
+                fee: 'General/OBC: ₹100, SC/ST/PwD/Women: No fee',
+                selection: 'Prelims → Mains → Interview → Final Merit List → Service Allocation → Training'
+            },
+            'upsc-ifos': {
+                title: 'Indian Forest Service (IFoS)',
+                subtitle: 'Forest Conservation and Management Service',
+                overview: 'IFoS exam is conducted for recruitment to Indian Forest Service, responsible for forest conservation, wildlife protection, and environmental management across India.',
+                eligibility: [
+                    ['Age Limit', '21-30 years'],
+                    ['Education', 'Bachelor\'s degree with one subject from specified list'],
+                    ['Nationality', 'Indian citizen'],
+                    ['Physical Standards', 'Must meet prescribed physical standards']
+                ],
+                pattern: 'Three stages: Preliminary (2 papers, 400 marks), Main (6 papers, 1000 marks), Interview (300 marks). Total 1300 marks for final ranking.',
+                syllabus: [
+                    'General Knowledge and Current Affairs',
+                    'Forest Science and Management',
+                    'Botany, Zoology, Chemistry, Physics',
+                    'Mathematics and Statistics',
+                    'Agriculture and Forestry Engineering'
+                ],
+                fee: 'General/OBC: ₹200, SC/ST/PwD/Women: ₹25',
+                selection: 'Prelims → Mains → Interview → Medical Examination → Final Merit List'
+            },
+            'ssc-cgl': {
+                title: 'Combined Graduate Level (CGL)',
+                subtitle: 'Group B and Group C Posts in Central Government',
+                overview: 'SSC CGL is one of the most popular exams for graduate-level posts in various ministries, departments, and organizations of the Government of India.',
+                eligibility: [
+                    ['Age Limit', '18-27 years (varies by post)'],
+                    ['Education', 'Bachelor\'s degree from recognized university'],
+                    ['Nationality', 'Indian citizen'],
+                    ['Posts', 'Inspector, Sub-Inspector, Assistant, etc.']
+                ],
+                pattern: 'Four-tier examination: Tier-I (100 questions, 200 marks), Tier-II (4 papers), Tier-III (descriptive), Tier-IV (skill test/computer proficiency).',
+                syllabus: [
+                    'General Intelligence and Reasoning',
+                    'General Awareness',
+                    'Quantitative Aptitude',
+                    'English Comprehension'
+                ],
+                fee: 'General/OBC: ₹100, SC/ST/PwD/Women: No fee',
+                selection: 'Tier-I → Tier-II → Tier-III → Tier-IV → Document Verification → Final Selection'
+            }
+        };
+
+        function showHomepage() {
+            hideAllPages();
+            document.getElementById('homepage').classList.add('active');
+        }
+
+        function showExamList(category) {
+            currentCategory = category;
+            hideAllPages();
+            document.getElementById(category + '-list').classList.add('active');
+        }
+
+        function showExamDetail(examId) {
+            hideAllPages();
+            
+            const exam = examData[examId];
+            if (exam) {
+                document.getElementById('detail-title').textContent = exam.title;
+                document.getElementById('detail-subtitle').textContent = exam.subtitle;
+                document.getElementById('exam-overview').textContent = exam.overview;
+                
+                // Update eligibility table
+                const eligibilityTable = document.getElementById('eligibility-table');
+                eligibilityTable.innerHTML = '';
+                exam.eligibility.forEach(([criteria, requirement]) => {
+                    const row = eligibilityTable.insertRow();
+                    row.insertCell(0).textContent = criteria;
+                    row.insertCell(1).textContent = requirement;
+                });
+                
+                document.getElementById('exam-pattern').innerHTML = `<p>${exam.pattern}</p>`;
+                
+                const syllabusHtml = '<ul>' + exam.syllabus.map(item => `<li>${item}</li>`).join('') + '</ul>';
+                document.getElementById('syllabus-highlights').innerHTML = syllabusHtml;
+                
+                document.getElementById('application-fee').innerHTML = `<p>${exam.fee}</p>`;
+                document.getElementById('selection-process').innerHTML = `<p>${exam.selection}</p>`;
+            }
+            
+            document.getElementById('exam-detail').classList.add('active');
+        }
+
+        function goBackToList() {
+            hideAllPages();
+            document.getElementById(currentCategory + '-list').classList.add('active');
+        }
+
+        function hideAllPages() {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+        }
+
+        // Add more exam data for demonstration
+        Object.assign(examData, {
+            'upsc-ese': {
+                title: 'Engineering Services Examination (ESE)',
+                subtitle: 'Group A Engineering Services',
+                overview: 'ESE is conducted for recruitment to Group A engineering services under the Government of India including Indian Railway Service of Engineers, Central Engineering Service, and others.',
+                eligibility: [
+                    ['Age Limit', '21-30 years'],
+                    ['Education', 'Engineering degree from recognized university'],
+                    ['Nationality', 'Indian citizen'],
+                    ['Disciplines', 'Civil, Mechanical, Electrical, Electronics & Telecom']
+                ],
+                pattern: 'Three stages: Preliminary (2 papers, 600 marks), Main (2 papers, 600 marks), Interview (200 marks). Objective + Conventional type questions.',
+                syllabus: [
+                    'Engineering Mathematics',
+                    'Core Engineering Subjects',
+                    'General Studies and Engineering Aptitude',
+                    'Technical subjects based on discipline'
+                ],
+                fee: 'General/OBC: ₹200, SC/ST/PwD/Women: ₹25',
+                selection: 'Prelims → Mains → Interview → Medical Examination → Final Merit List'
+            },
+            
+            'upsc-cds': {
+                title: 'Combined Defence Services (CDS)',
+                subtitle: 'Indian Military Academy, Naval Academy, Air Force Academy',
+                overview: 'CDS examination is conducted twice a year for admission to Indian Military Academy, Indian Naval Academy, and Air Force Academy for training as officers in Indian Armed Forces.',
+                eligibility: [
+                    ['Age Limit', '19-24 years (varies by academy)'],
+                    ['Education', 'Bachelor\'s degree for IMA/INA, 12th for AFA'],
+                    ['Nationality', 'Indian citizen'],
+                    ['Marital Status', 'Unmarried']
+                ],
+                pattern: 'Written examination (3 papers, 300 marks each) followed by SSB Interview (900 marks) for qualified candidates.',
+                syllabus: [
+                    'English (Grammar, Vocabulary, Comprehension)',
+                    'General Knowledge (History, Geography, Current Affairs)',
+                    'Elementary Mathematics (for IMA/INA only)'
+                ],
+                fee: 'No examination fee',
+                selection: 'Written Exam → SSB Interview → Medical Examination → Final Merit List'
+            },
+
+            'upsc-nda': {
+                title: 'National Defence Academy (NDA)',
+                subtitle: 'Joint Training Academy for Army, Navy, Air Force',
+                overview: 'NDA exam is conducted twice yearly for admission to the National Defence Academy for training as officers in the Indian Army, Navy, and Air Force.',
+                eligibility: [
+                    ['Age Limit', '16.5-19.5 years'],
+                    ['Education', '12th pass or appearing'],
+                    ['Nationality', 'Indian citizen'],
+                    ['Gender', 'Male and Female (from 2022)']
+                ],
+                pattern: 'Written examination (Mathematics 300 marks, GAT 600 marks) followed by SSB Interview (900 marks).',
+                syllabus: [
+                    'Mathematics (Algebra, Trigonometry, Calculus, Statistics)',
+                    'General Ability Test (English, Physics, Chemistry, General Science)',
+                    'History, Geography, Current Events'
+                ],
+                fee: 'No examination fee',
+                selection: 'Written Exam → SSB Interview → Medical Examination → Final Merit List'
+            },
+
+            'ssc-chsl': {
+                title: 'Combined Higher Secondary Level (CHSL)',
+                subtitle: 'LDC, JSA, PA, SA, DEO Posts',
+                overview: 'SSC CHSL is conducted for recruitment to Lower Division Clerk, Junior Secretariat Assistant, Postal Assistant, Sorting Assistant, and Data Entry Operator posts.',
+                eligibility: [
+                    ['Age Limit', '18-27 years'],
+                    ['Education', '12th pass from recognized board'],
+                    ['Nationality', 'Indian citizen'],
+                    ['Computer Knowledge', 'Required for DEO posts']
+                ],
+                pattern: 'Three-tier examination: Tier-I (100 questions, 200 marks), Tier-II (descriptive, 100 marks), Tier-III (skill test/typing test).',
+                syllabus: [
+                    'General Intelligence',
+                    'English Language',
+                    'Quantitative Aptitude',
+                    'General Awareness'
+                ],
+                fee: 'General/OBC: ₹100, SC/ST/PwD/Women: No fee',
+                selection: 'Tier-I → Tier-II → Tier-III → Document Verification → Final Selection'
+            },
+
+            'ctet': {
+                title: 'Central Teacher Eligibility Test (CTET)',
+                subtitle: 'Teaching eligibility for Central Government Schools',
+                overview: 'CTET is a qualifying examination for persons who intend to be teachers for classes I to VIII in schools under the Central Government.',
+                eligibility: [
+                    ['Education', 'Senior Secondary + 2-year Diploma in Elementary Education'],
+                    ['Alternative', 'Bachelor\'s + 1-year B.Ed'],
+                    ['For Paper-II', 'Graduation + B.Ed required'],
+                    ['Age Limit', 'No age limit']
+                ],
+                pattern: 'Two papers: Paper-I (Classes I-V, 150 marks), Paper-II (Classes VI-VIII, 150 marks). Duration: 2.5 hours each.',
+                syllabus: [
+                    'Child Development and Pedagogy',
+                    'Language I (compulsory)',
+                    'Language II (compulsory)', 
+                    'Mathematics/Science (Paper-I), Science & Social Studies (Paper-II)'
+                ],
+                fee: 'General/OBC: ₹1000 (one paper), ₹1200 (both papers), SC/ST: ₹500/₹600',
+                selection: 'Written Examination → Certificate (valid for 7 years) → Apply for teaching posts'
+            },
+
+            'ibps-po': {
+                title: 'IBPS Probationary Officer (PO)',
+                subtitle: 'Officer Scale-I in Public Sector Banks',
+                overview: 'IBPS PO exam is conducted for recruitment of Probationary Officers in participating public sector banks across India.',
+                eligibility: [
+                    ['Age Limit', '20-30 years'],
+                    ['Education', 'Bachelor\'s degree in any discipline'],
+                    ['Nationality', 'Indian citizen'],
+                    ['Computer Knowledge', 'Certificate/Diploma/Degree required']
+                ],
+                pattern: 'Three phases: Preliminary (100 marks), Main (200 marks), Interview (100 marks). Online examination mode.',
+                syllabus: [
+                    'English Language',
+                    'Quantitative Aptitude',
+                    'Reasoning Ability',
+                    'General/Economy/Banking Awareness',
+                    'Computer Knowledge'
+                ],
+                fee: 'General/OBC: ₹175, SC/ST/PwD: ₹175 (intimation charges only)',
+                selection: 'Prelims → Mains → Interview → Provisional Allotment → Final Selection'
+            },
+
+            'rrb-ntpc': {
+                title: 'RRB Non-Technical Popular Categories (NTPC)',
+                subtitle: 'Graduate and Undergraduate level posts in Railways',
+                overview: 'RRB NTPC exam is conducted for recruitment to non-technical popular categories posts in Indian Railways including Station Master, Goods Guard, SSE, JE, etc.',
+                eligibility: [
+                    ['Age Limit', '18-33 years (varies by post)'],
+                    ['Education', 'Graduate/12th pass (post-specific)'],
+                    ['Nationality', 'Indian citizen'],
+                    ['Medical Fitness', 'As per Railway requirements']
+                ],
+                pattern: 'Three stages: CBT-1 (100 marks), CBT-2 (120 marks), Computer Based Aptitude Test/Typing Skill Test (for specific posts).',
+                syllabus: [
+                    'General Awareness',
+                    'Mathematics',
+                    'General Intelligence and Reasoning',
+                    'General Science (CBT-2 only)'
+                ],
+                fee: 'General/OBC: ₹500, SC/ST/PwD/Women/Minorities: ₹250',
+                selection: 'CBT-1 → CBT-2 → Skill Test/Aptitude Test → Document Verification → Medical Examination'
+            },
+
+            'uppcs': {
+                title: 'Uttar Pradesh Provincial Civil Services (UPPCS)',
+                subtitle: 'State Civil Services of Uttar Pradesh',
+                overview: 'UPPCS examination is conducted by UPPSC for recruitment to various state civil services posts in Uttar Pradesh including Deputy Collector, DSP, ARO, etc.',
+                eligibility: [
+                    ['Age Limit', '21-40 years'],
+                    ['Education', 'Bachelor\'s degree from recognized university'],
+                    ['Nationality', 'Indian citizen'],
+                    ['Domicile', 'UP domicile preferred for some posts']
+                ],
+                pattern: 'Three stages: Preliminary (2 papers, 400 marks), Main (8 papers, 1500 marks), Interview (275 marks).',
+                syllabus: [
+                    'General Studies (Indian History, Geography, Polity)',
+                    'General Hindi and Essay',
+                    'UP History, Culture, Geography',
+                    'Optional Subject (one from available list)',
+                    'Current Affairs and General Knowledge'
+                ],
+                fee: 'General/OBC: ₹105, SC/ST: ₹65',
+                selection: 'Prelims → Mains → Interview → Final Merit List → Service Allocation'
+            }
+        });
+
+        // Initialize the website
+        document.addEventListener('DOMContentLoaded', function() {
+            showHomepage();
+        });
+    </script>
+</body>
+</html>
